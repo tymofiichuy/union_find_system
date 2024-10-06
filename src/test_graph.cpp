@@ -21,20 +21,71 @@ test_graph::~test_graph(){
     this->reset_edges();
 }
 
+bool edge::operator==(edge& in){
+    return((this->from == in.from)
+    &&(this->to == in.to)
+    &&(this->weight == in.weight));
+}
+
+edge edge::redirect(){
+    edge res;
+    res.from = this->to;
+    res.to = this->from;
+    res.weight = this->weight;
+    return res;
+}
+
 void test_graph::add_edge(edge e){
     edge_node* node = new edge_node();
+    edge_node* rev_node = new edge_node();
     node->value = e;
+    rev_node->value = e.redirect();
+
+    node->prev = rev_node;
+    rev_node->next = node;
+    
     if(edges){
-        edges->prev = node;
-        node->next = edges;        
+        edge_node* temp = edges;
+        if(temp->value.weight >= e.weight){
+            edges->prev = node;
+            node->next = edges;
+            edges = rev_node;
+        }
+        else{
+            while(temp->next){
+                if(temp->next->value.weight < e.weight){
+                    temp = temp->next;
+                }
+                else{
+                    break;
+                }
+            }
+            edge_node* temp_poi = temp->next;
+            temp->next = rev_node;
+            rev_node->prev = temp;        
+            if(temp_poi){
+                temp_poi->prev = node;
+                node->next = temp_poi;            
+            }            
+        }
     }
-    edges = node;
+    else{
+        edges = rev_node;
+    }
+
+    // if(edges){
+    //     edges->prev = node;
+    //     node->next = edges;        
+    // }
+    // node->prev = rev_node;
+    // rev_node->next = node;
+    // edges = rev_node;
 }
 
 void test_graph::random_graph(int min_weight, int max_weight, int probability){
     random_device rd;
     mt19937 mt (rd());
-    uniform_int_distribution<float> dist_w (min_weight, max_weight);
+    uniform_int_distribution<int> dist_w (min_weight, max_weight);
     uniform_int_distribution<int> dist_pr (1, 100);
     for(int i = 1; i <= vertices; i++){
         for(int j = i+1; j <= vertices; j++){
@@ -44,3 +95,15 @@ void test_graph::random_graph(int min_weight, int max_weight, int probability){
         }
     }
 }
+
+// void test_graph::sort_edges(edge_node* start, edge_node* end){
+//     edge_node* quick = start;
+//     edge_node* slow = end;
+//     while(quick != end){
+//         quick = quick->next;
+//         if(quick != end){
+//             quick = quick->next;
+//             slow = slow->next;
+//         }
+//     }
+// }

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <gtest/gtest.h>
 #include "union_find.hpp"
+#include "test_graph.hpp"
 
 using namespace std;
 
@@ -41,6 +42,81 @@ TEST(UnionFindTest, MultipleUnionTest){
     
     EXPECT_EQ(res_1, 2);
     EXPECT_EQ(res_2, 2); 
+}
+
+TEST(GraphTest, SimpleAddEdgeTest){
+  test_graph graph(4);
+  edge e;
+  e.from = 1;
+  e.to = 3;
+  e.weight = 2;
+  edge e_redir = e.redirect();
+
+  graph.add_edge(e);
+  
+  EXPECT_TRUE(graph.edges->value == e_redir);
+  EXPECT_TRUE(graph.edges->next->value == e);
+}
+
+TEST(GraphTest, ResetEdgeTest){
+  test_graph graph(4);
+
+  graph.add_edge({1, 3, 2});
+  graph.reset_edges();
+  
+  EXPECT_TRUE(graph.edges == nullptr);
+}
+
+TEST(GraphTest, AddEdgeTest){
+  test_graph graph(4);
+  edge e_1;
+  e_1.from = 1;
+  e_1.to = 3;
+  e_1.weight = 2;
+  edge e_1_redir = e_1.redirect();
+  edge e_2;
+  e_2.from = 1;
+  e_2.to = 2;
+  e_2.weight = 4;
+  edge e_2_redir = e_2.redirect();
+
+  graph.add_edge(e_1);
+  graph.add_edge(e_2);
+
+  edge_node* temp = graph.edges;
+  EXPECT_TRUE(temp->value == e_1_redir);
+  temp = temp->next;
+  EXPECT_TRUE(temp->value == e_1);
+  temp = temp->next;
+  EXPECT_TRUE(temp->value == e_2_redir);
+  temp = temp->next;
+  EXPECT_TRUE(temp->value == e_2);
+}
+
+TEST(GraphTest, AddEdgeToBeginningTest){
+  test_graph graph(4);
+  edge e_1;
+  e_1.from = 1;
+  e_1.to = 3;
+  e_1.weight = 2;
+  edge e_1_redir = e_1.redirect();
+  edge e_2;
+  e_2.from = 1;
+  e_2.to = 2;
+  e_2.weight = 1;
+  edge e_2_redir = e_2.redirect();
+
+  graph.add_edge(e_1);
+  graph.add_edge(e_2);
+
+  edge_node* temp = graph.edges;
+  EXPECT_TRUE(temp->value == e_2_redir);
+  temp = temp->next;
+  EXPECT_TRUE(temp->value == e_2);
+  temp = temp->next;
+  EXPECT_TRUE(temp->value == e_1_redir);
+  temp = temp->next;
+  EXPECT_TRUE(temp->value == e_1);
 }
 
 int main(int argc, char **argv) {

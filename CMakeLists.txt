@@ -16,6 +16,6 @@ enable_testing()
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-add_executable(runUnitTests ${TEST_DIR}/unit_test.cpp ${SOURCE_DIR}/union_find.cpp)
+add_executable(runUnitTests ${TEST_DIR}/unit_test.cpp ${SOURCE_DIR}/union_find.cpp ${SOURCE_DIR}/test_graph.cpp)
 target_link_libraries(runUnitTests gtest gtest_main)
 add_test(runUnitTests runUnitTests)

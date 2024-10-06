@@ -1,7 +1,10 @@
 struct edge{
     int from;
     int to;
-    float weight;
+    int weight;
+
+    bool operator==(edge&);
+    edge redirect();
 };
 
 struct edge_node{
@@ -11,15 +14,15 @@ struct edge_node{
 };
 
 class test_graph{
-private:
+public:
     int vertices;
     edge_node* edges = nullptr;
-public:
+
     test_graph(int size = 0);
     ~test_graph();
 
     void reset_edges();
     void add_edge(edge);
     void random_graph(int min_weight, int max_weight, int probability);
-    void sort_edges();
+    //void sort_edges(edge_node* start, edge_node* end);
 };
