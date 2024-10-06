@@ -97,8 +97,8 @@ void test_graph::random_graph(int min_weight, int max_weight, int probability){
     mt19937 mt (rd());
     uniform_int_distribution<int> dist_w (min_weight, max_weight);
     uniform_int_distribution<int> dist_pr (1, 100);
-    for(int i = 1; i <= vertices; i++){
-        for(int j = i+1; j <= vertices; j++){
+    for(int i = 0; i < vertices; i++){
+        for(int j = i+1; j < vertices; j++){
             if(dist_pr(mt) <= probability){
                 this->add_edge({i, j, dist_w(mt)});
             }
