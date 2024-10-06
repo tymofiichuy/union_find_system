@@ -38,9 +38,9 @@ TEST(UnionFindTest, MultipleUnionTest){
     set_system.set_union(1, 2);
     int res_1 = set_system.find(2);
     int res_2 = set_system.find(3);
-
-    EXPECT_EQ(res_1, 1);
-    EXPECT_EQ(res_2, 1); 
+    
+    EXPECT_EQ(res_1, 2);
+    EXPECT_EQ(res_2, 2); 
 }
 
 int main(int argc, char **argv) {

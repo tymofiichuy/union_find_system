@@ -5,7 +5,7 @@
 using namespace std;
 
 //initialize "size" sets of power 1
-union_find_table::union_find_table(int size = 0){
+union_find_table::union_find_table(int size){
     un_power = size;
     r_array = new int[size];
     next_array = new int[size];
