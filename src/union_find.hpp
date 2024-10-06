@@ -8,6 +8,8 @@ private:
     int* internal_names;
     int* external_names;
 public:
+    int power;
+
     union_find_table(int size = 0);
     ~union_find_table();
 

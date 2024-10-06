@@ -23,6 +23,6 @@ public:
 
     void reset_edges();
     void add_edge(edge);
+    void min_spanning_tree(test_graph& out);
     void random_graph(int min_weight, int max_weight, int probability);
-    //void sort_edges(edge_node* start, edge_node* end);
 };

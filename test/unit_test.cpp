@@ -119,6 +119,40 @@ TEST(GraphTest, AddEdgeToBeginningTest){
   EXPECT_TRUE(temp->value == e_1);
 }
 
+TEST(GraphTest, SpanningTreeTest){
+  test_graph graph(4);
+  test_graph out_graph(4);
+  edge e_1;
+  e_1.from = 0;
+  e_1.to = 1;
+  e_1.weight = 1;
+  edge e_2;
+  e_2.from = 1;
+  e_2.to = 3;
+  e_2.weight = 1;
+  edge e_3;
+  e_3.from = 3;
+  e_3.to = 2;
+  e_3.weight = 1;
+
+  graph.add_edge({0,1,1});
+  graph.add_edge({0,2,3});
+  graph.add_edge({1,3,1});
+  graph.add_edge({3,2,1});
+  graph.add_edge({1,2,2});
+
+
+  graph.min_spanning_tree(out_graph);
+  edge_node* temp = out_graph.edges;
+  EXPECT_TRUE(temp->value == e_1);
+  temp = temp->next->next;
+  EXPECT_TRUE(temp->value == e_2);
+  temp = temp->next->next;
+  EXPECT_TRUE(temp->value == e_3);
+  temp = temp->next->next;
+  EXPECT_TRUE(!temp);
+}
+
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

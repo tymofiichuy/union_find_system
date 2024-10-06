@@ -23,6 +23,8 @@ union_find_table::union_find_table(int size){
         next_array[i] = -1;
         size_array[i] = 1;
     }
+
+    power = size;
 }
 
 union_find_table::~union_find_table(){
@@ -44,6 +46,8 @@ int union_find_table::find(int x){
 }
 
 int union_find_table::set_union(int x, int y){
+    power--;
+
     x = internal_names[x];
     y = internal_names[y];
     if(size_array[x] > size_array[y]){

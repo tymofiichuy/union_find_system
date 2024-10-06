@@ -1,4 +1,5 @@
 #include "test_graph.hpp"
+#include "union_find.hpp"
 #include <iostream>
 #include<random>
 
@@ -72,17 +73,26 @@ void test_graph::add_edge(edge e){
     else{
         edges = rev_node;
     }
+}
 
-    // if(edges){
-    //     edges->prev = node;
-    //     node->next = edges;        
-    // }
-    // node->prev = rev_node;
-    // rev_node->next = node;
-    // edges = rev_node;
+void test_graph::min_spanning_tree(test_graph& out){
+    out.reset_edges();
+    union_find_table table(vertices);
+    edge_node* temp = edges;
+    int x, y;
+    while(table.power > 1 && temp){
+        x = table.find(temp->value.from);
+        y = table.find(temp->value.to);
+        if(x != y){
+            table.set_union(x, y);
+            out.add_edge(temp->value);
+        }
+        temp = temp->next->next;
+    }
 }
 
 void test_graph::random_graph(int min_weight, int max_weight, int probability){
+    this->reset_edges();
     random_device rd;
     mt19937 mt (rd());
     uniform_int_distribution<int> dist_w (min_weight, max_weight);
@@ -95,15 +105,3 @@ void test_graph::random_graph(int min_weight, int max_weight, int probability){
         }
     }
 }
-
-// void test_graph::sort_edges(edge_node* start, edge_node* end){
-//     edge_node* quick = start;
-//     edge_node* slow = end;
-//     while(quick != end){
-//         quick = quick->next;
-//         if(quick != end){
-//             quick = quick->next;
-//             slow = slow->next;
-//         }
-//     }
-// }
