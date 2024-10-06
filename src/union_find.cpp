@@ -66,7 +66,8 @@ int union_find_table::set_union(int x, int y){
     size_array[x] = 0;
     next_array[last] = list[y];
     list[y] = list[x];
-    internal_names[x] = y;
+    //!
+    internal_names[external_names[x]] = y;
     external_names[y] = external_names[x];
     return external_names[y]; 
 }
