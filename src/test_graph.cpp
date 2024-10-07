@@ -36,7 +36,52 @@ edge edge::redirect(){
     return res;
 }
 
+void test_graph::add_sort_edge(edge e){
+    if(!sorted){
+        throw invalid_argument("Existing edges are unsorted");
+    }
+    else{
+        edge_node* node = new edge_node();
+        edge_node* rev_node = new edge_node();
+        node->value = e;
+        rev_node->value = e.redirect();
+
+        node->prev = rev_node;
+        rev_node->next = node;
+        
+        if(edges){
+            edge_node* temp = edges;
+            if(temp->value.weight >= e.weight){
+                edges->prev = node;
+                node->next = edges;
+                edges = rev_node;
+            }
+            else{
+                while(temp->next){
+                    if(temp->next->value.weight < e.weight){
+                        temp = temp->next;
+                    }
+                    else{
+                        break;
+                    }
+                }
+                edge_node* temp_poi = temp->next;
+                temp->next = rev_node;
+                rev_node->prev = temp;        
+                if(temp_poi){
+                    temp_poi->prev = node;
+                    node->next = temp_poi;            
+                }            
+            }
+        }
+        else{
+            edges = rev_node;
+        }        
+    }
+}
+
 void test_graph::add_edge(edge e){
+    sorted = false;
     edge_node* node = new edge_node();
     edge_node* rev_node = new edge_node();
     node->value = e;
@@ -44,32 +89,13 @@ void test_graph::add_edge(edge e){
 
     node->prev = rev_node;
     rev_node->next = node;
-    
+
     if(edges){
-        edge_node* temp = edges;
-        if(temp->value.weight >= e.weight){
-            edges->prev = node;
-            node->next = edges;
-            edges = rev_node;
-        }
-        else{
-            while(temp->next){
-                if(temp->next->value.weight < e.weight){
-                    temp = temp->next;
-                }
-                else{
-                    break;
-                }
-            }
-            edge_node* temp_poi = temp->next;
-            temp->next = rev_node;
-            rev_node->prev = temp;        
-            if(temp_poi){
-                temp_poi->prev = node;
-                node->next = temp_poi;            
-            }            
-        }
+        edges->prev = node;
+        node->next = edges;
+        edges = rev_node;
     }
+
     else{
         edges = rev_node;
     }
@@ -100,7 +126,7 @@ void test_graph::random_graph(int min_weight, int max_weight, int probability){
     for(int i = 0; i < vertices; i++){
         for(int j = i+1; j < vertices; j++){
             if(dist_pr(mt) <= probability){
-                this->add_edge({i, j, dist_w(mt)});
+                this->add_sort_edge({i, j, dist_w(mt)});
             }
         }
     }
